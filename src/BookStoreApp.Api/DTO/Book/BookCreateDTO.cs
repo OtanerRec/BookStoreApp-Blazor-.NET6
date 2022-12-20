@@ -24,5 +24,8 @@ namespace BookStoreApp.Api.DTO.Book
         [Required]
         [Range(0, int.MaxValue)]
         public decimal? Price { get; set; }
+
+        [Required]
+        public int AuthorId { get; set; }
     }
 }
