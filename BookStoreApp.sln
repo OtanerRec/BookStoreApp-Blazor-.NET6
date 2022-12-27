@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreApp.Api", "src\BookStoreApp.Api\BookStoreApp.Api.csproj", "{C06AF8B5-D1ED-46B2-B61A-BCCD8AE4A22C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreApp.Blazor.Server.UI", "src\BookStoreApp.Blazor.Server.UI\BookStoreApp.Blazor.Server.UI.csproj", "{49CF8860-E5FF-46C3-AF6F-7305859A0E53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreApp.Blazor.Server.UI", "src\BookStoreApp.Blazor.Server.UI\BookStoreApp.Blazor.Server.UI.csproj", "{49CF8860-E5FF-46C3-AF6F-7305859A0E53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

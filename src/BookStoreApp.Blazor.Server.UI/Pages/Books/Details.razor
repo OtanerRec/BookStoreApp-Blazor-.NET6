@@ -1,0 +1,75 @@
+﻿@page "/books/details/{id:int}"
+@inject IBookService _bookService
+@inject NavigationManager _navManger
+
+<h3>Book Details</h3>
+
+<EditForm Model="Book">
+<fieldset disabled="true">
+        <div class="form-group">
+            <label>Book Cover Photo</label>
+            <div>
+                <img src="@Book.Image" width="100" heigh="100" class="img-thumbnail" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="title">Book Title</label>
+            <InputText class="form-control" @bind-Value="Book.Title" id="title" />
+        </div>
+        <div class="form-group">
+            <label for="title">Author</label>
+            <InputText class="form-control" @bind-Value="Book.AuthorName" id="author" />
+        </div>
+        <div class="form-group">
+            <label for="isbn"> ISBN</label>
+            <InputText class="form-control" @bind-Value="Book.Isbn" id="isbn" />
+        </div>
+        <div class="form-group">
+            <label for="price"> Price</label>
+            <InputNumber class="form-control" @bind-Value="Book.Price" id="price" />
+        </div>
+        <div class="form-group">
+            <label for="year"> Year</label>
+            <InputNumber class="form-control" @bind-Value="Book.Year" id="year" />
+        </div>
+        <div class="form-group">
+            <label for="summary"> Summary</label>
+            <InputTextArea class="form-control" @bind-Value="Book.Summary" id="summary" />
+        </div>
+</fieldset>
+    <br />
+    <button class="btn btn-warning" @onclick="GoToEdit">
+        <span class="oi oi-pencil"></span>
+        Edit Book
+    </button>
+    <button @onclick="BackToList" class="btn btn-outline-secondary">
+        <span class="oi oi-media-skip-backward"></span>
+        Back To List
+    </button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private BookDetailsDTO Book = new BookDetailsDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await _bookService.GetBook(Id);
+        if (response.Success)
+        {
+            Book = response.Data;
+        }
+    }
+
+    private void BackToList()
+    {
+        _navManger.NavigateTo("/books/");
+    }
+
+    private void GoToEdit()
+    {
+        _navManger.NavigateTo($"/books/update/{Book.Id}");
+    }
+}
