@@ -4,7 +4,7 @@ using BookStoreApp.Blazor.Server.UI.Services.Base;
 
 namespace BookStoreApp.Blazor.Server.UI.Services.Authentication
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService : BaseHttpService, IAuthenticationService
     {
         private readonly IClient _httpClient;
         private readonly ILocalStorageService _localStorage;
@@ -14,23 +14,38 @@ namespace BookStoreApp.Blazor.Server.UI.Services.Authentication
             IClient httpClient,
             ILocalStorageService localStorage,
             ApiAuthenticationStateProvider apiAuthenticationStateProvider)
+            : base(httpClient, localStorage)
         {
             _httpClient = httpClient;
             _localStorage = localStorage;
             _apiAuthenticationStateProvider = apiAuthenticationStateProvider;
         }
 
-        public async Task<bool> AuthenticateAsync(LoginUserDto loginModel)
+        public async Task<Response<AuthResponse>> AuthenticateAsync(LoginUserDto loginModel)
         {
-            var response = await _httpClient.LoginAsync(loginModel);
+            Response<AuthResponse> response;
 
-            //Store Token
-            await _localStorage.SetItemAsync("accessToken", response.Token);
+            try
+            {
+                var result = await _httpClient.LoginAsync(loginModel);
+                response = new Response<AuthResponse>
+                {
+                    Data = result,
+                    Success = true,
+                };
 
-            //Change auth state of app
-            await ((ApiAuthenticationStateProvider)_apiAuthenticationStateProvider).LoggedIn();
+                //Store Token
+                await _localStorage.SetItemAsync("accessToken", result.Token);
 
-            return true;
+                //Change auth state of app
+                await ((ApiAuthenticationStateProvider)_apiAuthenticationStateProvider).LoggedIn();
+            }
+            catch (ApiException exception)
+            {
+                response = ConvertApiExceptions<AuthResponse>(exception);
+            }
+
+            return response;
         }
 
         public async Task Logout()
